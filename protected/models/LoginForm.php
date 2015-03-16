@@ -44,14 +44,21 @@ class LoginForm extends CFormModel
 	 * Authenticates the password.
 	 * This is the 'authenticate' validator as declared in rules().
 	 */
+     //code day 17/03/2015
+     
 	public function authenticate($attribute,$params)
 	{
-		if(!$this->hasErrors())
-		{
-			$this->_identity=new UserIdentity($this->username,$this->password);
-			if(!$this->_identity->authenticate())
-				$this->addError('password','Incorrect username or password.');
-		}
+	   $this->_identity = new UserIdentity($this->username,$this->password);
+       $this->_identity->authenticate();
+       
+       switch($this->_identity->errorCode){
+            case UserIdentity::ERROR_USERNAME_INVALID:
+                $this->addError('username','username invalid');
+            break;
+            case UserIdentity::ERROR_PASSWORD_INVALID:
+                $this->addError('password','password invalid');
+            break;
+       }
 	}
 
 	/**
